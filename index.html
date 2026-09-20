@@ -284,10 +284,10 @@ yesBtn.onclick = sayYes;
 function sayYes(){
   $('#askEyebrow').textContent = 'Result · positive';
   $('#askTitle').innerHTML = `It's a <em>date!</em> 🥂`;
-  $('#askSub').innerHTML = `Best result I've had all week. First round's on me — just tell me when you're free.`;
+  $('#askSub').innerHTML = `Best result I've had all week. One last thing: the lab needs your <em>number</em> on file — you can send it straight to ${me || 'me'}. 📱`;
   $('#choices').remove(); $('#fine').remove();
   $('#send').hidden = false; $('#send').textContent = `Tell ${me || 'me'} 💌`;
-  $('#ps').innerHTML = `P.S. I'm B-positive we'll have fun.<br>P.P.S. The lab says I need a number on file to schedule this. Yours would do nicely. 📱`;
+  $('#ps').innerHTML = `P.S. I'm B-positive we'll have fun.`;
   hearts(innerWidth / 2, innerHeight / 2);
   rain(70, 60); setInterval(() => rain(4, 0), 900);
 }
