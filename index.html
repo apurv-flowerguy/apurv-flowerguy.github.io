@@ -38,7 +38,7 @@ p{margin:0}
 .hand{font-family:Caveat,cursive;font-size:23px;line-height:1.15;color:var(--rose-d);min-height:27px}
 .tiny{font-size:13px;color:var(--soft)}
 .btn{
-  appearance:none;border:0;cursor:pointer;font:800 17px/1 Nunito,system-ui,sans-serif;color:#fff;
+  appearance:none;border:0;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none;font:800 17px/1 Nunito,system-ui,sans-serif;color:#fff;
   padding:16px 26px;border-radius:999px;background:linear-gradient(180deg,#f0518c,var(--rose-d));
   box-shadow:0 6px 0 #9c1a4a,0 14px 24px -8px #c4245f88;transition:transform .15s,box-shadow .15s;
 }
@@ -125,6 +125,7 @@ p{margin:0}
       <g class="tr"><path d="M116 34V104a14 14 0 0 0 28 0V34Z" fill="#ffffffaa" stroke="#cdb9c6" stroke-width="1.5"/><path d="M117.5 58V104a12.5 12.5 0 0 0 25 0V58Z" fill="#ffc94d" opacity=".75"/><rect x="114" y="30" width="32" height="6" rx="3" fill="#e0425a"/><path d="M122 42V98" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/><path d="M124 20L128 100" stroke="#5fb878" stroke-width="3" stroke-linecap="round"/></g>
     </svg>
     <p class="sub" id="askSub">You draw blood all day — let me draw you out for <em>drinks</em>? I promise it won't be in <span style="white-space:nowrap"><em>vein</em>. 🥂</span></p>
+    <p class="tiny" id="fine">*Full disclosure: I don't really drink — I'll probably just have a beer. "Shots" sounded cooler.</p>
     <div class="choices" id="choices">
       <button class="btn" id="yes">Yes — you're my type 🥂</button>
       <button class="btn ghost" id="no">No</button>
@@ -247,14 +248,18 @@ $('#next').onclick = () => {
 /* ---------- page 2 ---------- */
 $('#askEyebrow').textContent = her ? `One more thing, ${her}` : 'One more thing';
 const NO_TEXT = ['No', 'Hard stick — try again', 'Missed the vein', 'Oops, that one rolled', 'Still no?', "Tourniquet's getting tight…"];
-let noCount = 0;
+let noCount = 0, lastDodge = -1e9;
 const yesBtn = $('#yes'), noBtn = $('#no');
 function dodge(e){
   if (noBtn.classList.contains('gave-up')) return;
   e.preventDefault();
+  // one tap = one dodge: a phone tap fires pointerdown AND click, so ignore anything within 350ms
+  if (e.timeStamp - lastDodge < 350) return;
+  lastDodge = e.timeStamp;
+  if (navigator.vibrate) navigator.vibrate(25);
   if (++noCount >= NO_TEXT.length){
     noBtn.textContent = 'okay fine, YES 🥂'; noBtn.classList.add('gave-up'); noBtn.style.transform = '';
-    setTimeout(() => noBtn.onclick = sayYes, 50);
+    setTimeout(() => noBtn.onclick = sayYes, 600); // after this tap's own click has passed, so she sees it give up first
     return;
   }
   noBtn.textContent = NO_TEXT[noCount];
@@ -273,21 +278,21 @@ function dodge(e){
 }
 noBtn.addEventListener('pointerdown', dodge);
 noBtn.addEventListener('mouseenter', e => { if (matchMedia('(hover:hover)').matches) dodge(e); });
-noBtn.addEventListener('click', e => { if (!noBtn.classList.contains('gave-up')) dodge(e); });
+noBtn.addEventListener('click', e => { if (noBtn.classList.contains('gave-up')) return; e.detail === 0 ? dodge(e) : e.preventDefault(); }); // detail 0 = keyboard
 yesBtn.onclick = sayYes;
 
 function sayYes(){
   $('#askEyebrow').textContent = 'Result · positive';
   $('#askTitle').innerHTML = `It's a <em>date!</em> 🥂`;
   $('#askSub').innerHTML = `Best result I've had all week. First round's on me — just tell me when you're free.`;
-  $('#choices').remove();
+  $('#choices').remove(); $('#fine').remove();
   $('#send').hidden = false; $('#send').textContent = `Tell ${me || 'me'} 💌`;
-  $('#ps').textContent = `P.S. I'm B-positive we'll have fun.`;
+  $('#ps').innerHTML = `P.S. I'm B-positive we'll have fun.<br>P.P.S. The lab says I need a number on file to schedule this. Yours would do nicely. 📱`;
   hearts(innerWidth / 2, innerHeight / 2);
   rain(70, 60); setInterval(() => rain(4, 0), 900);
 }
 $('#send').onclick = async () => {
-  const text = `Results are in: it's a YES 🥂🌸${her ? ' — ' + her : ''}`;
+  const text = `Results are in: it's a YES 🥂🌸${her ? ' — ' + her : ''}\n📱 My number: `;
   try {
     if (navigator.share) return await navigator.share({ text });
     await navigator.clipboard.writeText(text); toast(`Copied! Now paste it to ${me || 'me'} 😌`);
