@@ -92,6 +92,8 @@ p{margin:0}
 .heart{position:fixed;z-index:30;pointer-events:none;color:var(--rose);animation:floatUp 1s ease-out forwards}
 @keyframes floatUp{to{transform:translate(var(--hx),-90px) scale(1.5);opacity:0}}
 #toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,90px);z-index:40;background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;transition:transform .35s;white-space:nowrap}
+#mute{position:fixed;top:calc(12px + env(safe-area-inset-top));right:12px;z-index:40;width:42px;height:42px;border-radius:50%;border:0;background:#fff;font-size:18px;cursor:pointer;box-shadow:0 3px 0 var(--line),0 0 0 1.5px var(--line) inset;touch-action:manipulation}
+#mute[hidden]{display:none}
 #toast.show{transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){
   .pt,.grow,.stemline,.wrap,.sway,#whole,.pulse,.cheers *{animation:none!important;transform:none;stroke-dashoffset:0}
@@ -124,8 +126,7 @@ p{margin:0}
       <g class="tl"><path d="M56 34V104a14 14 0 0 0 28 0V34Z" fill="#ffffffaa" stroke="#cdb9c6" stroke-width="1.5"/><path d="M57.5 62V104a12.5 12.5 0 0 0 25 0V62Z" fill="#ff9dbb" opacity=".75"/><rect x="54" y="30" width="32" height="6" rx="3" fill="#b79ae0"/><path d="M62 42V98" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/><path d="M76 20L72 100" stroke="#e6397a" stroke-width="3" stroke-linecap="round"/></g>
       <g class="tr"><path d="M116 34V104a14 14 0 0 0 28 0V34Z" fill="#ffffffaa" stroke="#cdb9c6" stroke-width="1.5"/><path d="M117.5 58V104a12.5 12.5 0 0 0 25 0V58Z" fill="#ffc94d" opacity=".75"/><rect x="114" y="30" width="32" height="6" rx="3" fill="#e0425a"/><path d="M122 42V98" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/><path d="M124 20L128 100" stroke="#5fb878" stroke-width="3" stroke-linecap="round"/></g>
     </svg>
-    <p class="sub" id="askSub">You draw blood all day — let me draw you out for <em>drinks</em>? I promise it won't be in <span style="white-space:nowrap"><em>vein</em>. 🥂</span></p>
-    <p class="tiny" id="fine">*Full disclosure: I don't really drink — I'll probably just have a beer. "Shots" sounded cooler.</p>
+    <p class="sub" id="askSub">*Full disclosure: I don't really drink — I'll probably just have a beer. "Shots" sounded cooler. 🍺</p>
     <div class="choices" id="choices">
       <button class="btn" id="yes">Yes — you're my type 🥂</button>
       <button class="btn ghost" id="no">No</button>
@@ -135,6 +136,7 @@ p{margin:0}
   </section>
 </main>
 <div id="petals" aria-hidden="true"></div>
+<button id="mute" aria-label="Mute music" hidden>🔊</button>
 <div id="toast" role="status"></div>
 
 <script>
@@ -285,9 +287,10 @@ function sayYes(){
   $('#askEyebrow').textContent = 'Result · positive';
   $('#askTitle').innerHTML = `It's a <em>date!</em> 🥂`;
   $('#askSub').innerHTML = `Best result I've had all week. One last thing: the lab needs your <em>number</em> on file — you can send it straight to ${me || 'me'}. 📱`;
-  $('#choices').remove(); $('#fine').remove();
+  $('#choices').remove();
   $('#send').hidden = false; $('#send').textContent = `Tell ${me || 'me'} 💌`;
   $('#ps').innerHTML = `P.S. I'm B-positive we'll have fun.`;
+  playSong();
   hearts(innerWidth / 2, innerHeight / 2);
   rain(70, 60); setInterval(() => rain(4, 0), 900);
 }
@@ -298,6 +301,51 @@ $('#send').onclick = async () => {
     await navigator.clipboard.writeText(text); toast(`Copied! Now paste it to ${me || 'me'} 😌`);
   } catch (err) { if (err.name !== 'AbortError') toast(`Just text ${me || 'me'}: "yes" 🌸`); }
 };
+
+/* ---------- music: a music-box Canon in D, synthesised and pre-rendered in the browser (no file to download) ---------- */
+const song = new Audio(); song.loop = true;
+let wantSong = false;
+const midi = n => { const m = /^([A-G])(#?)(\d)$/.exec(n); return 12 * (+m[3] + 1) + { C:0, D:2, E:4, F:5, G:7, A:9, B:11 }[m[1]] + (m[2] ? 1 : 0); };
+async function renderSong(){
+  const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if (!OAC) return;
+  const CH = 1.4, LOOP = CH * 24, SR = 44100;                       // 8 chords x 3 cycles per loop
+  const PRE = CH * 2;                                               // pre-roll the loop's last two chords, then cut them off, so their tails wrap seamlessly
+  const ctx = new OAC(1, Math.ceil(SR * (LOOP + PRE)), SR);
+  const out = ctx.createGain(); out.connect(ctx.destination);
+  const dl = ctx.createDelay(1), fb = ctx.createGain(); dl.delayTime.value = .3; fb.gain.value = .28;
+  out.connect(dl); dl.connect(fb); fb.connect(dl); fb.connect(ctx.destination);
+  const tone = (t, n, g, dec, type = 'sine') => [[1, g, dec], [4, g * .12, dec * .35]].forEach(([k, a, d], j) => {
+    const o = ctx.createOscillator(), v = ctx.createGain();
+    o.type = j ? 'sine' : type; o.frequency.value = 440 * 2 ** ((midi(n) - 69) / 12) * k;
+    v.gain.setValueAtTime(0, t); v.gain.linearRampToValueAtTime(a, t + .008); v.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(v); v.connect(out); o.start(t); o.stop(t + d + .05);
+  });
+  const CHORDS = [['D3','A3','D4','F#4'],['A2','E3','A3','C#4'],['B2','F#3','B3','D4'],['F#2','C#3','F#3','A3'],['G2','D3','G3','B3'],['D3','A3','D4','F#4'],['G2','D3','G3','B3'],['A2','E3','A3','C#4']];
+  const M1 = ['F#5','E5','D5','C#5','B4','A4','B4','C#5'], M2 = ['D5','C#5','B4','A4','G4','F#4','G4','E4'];
+  const FAST = ['A5:2 F#5 G5 A5:2 F#5 G5','A5 A4 B4 C#5 D5 E5 F#5 G5','F#5:2 D5 E5 F#5:2 F#4 G4','A4 B4 A4 G4 A4 F#4 G4 A4',
+                'G4:2 B4 A4 G4:2 F#4 E4','F#4 E4 D4 E4 F#4 G4 A4 B4','G4:2 B4 A4 B4:2 C#5 D5','A4 B4 C#5 D5 E5 F#5 G5 A5'];
+  for (let pass = 0; pass < 2; pass++) for (let cyc = 0; cyc < 3; cyc++) CHORDS.forEach((c, i) => {
+    if (!pass && (cyc < 2 || i < 6)) return;
+    const t = pass ? PRE + (cyc * 8 + i) * CH : (i - 6) * CH;
+    tone(t, c[0], .2, 2.4, 'triangle');
+    [1, 2, 3, 2].forEach((k, j) => tone(t + j * CH / 4, c[k], cyc < 2 ? .09 : .05, 1));
+    if (cyc < 2) tone(t, M1[i], .2, 2.2);
+    if (cyc === 1) tone(t, M2[i], .15, 2.2);
+    if (cyc === 2){ let at = t; FAST[i].split(' ').forEach(x => { const [n, len = 1] = x.split(':'); tone(at, n, .17, .8); at += len * CH / 8; }); }
+  });
+  const buf = await new Promise(res => { ctx.oncomplete = e => res(e.renderedBuffer); const p = ctx.startRendering(); if (p && p.then) p.then(res); });
+  const data = buf.getChannelData(0).subarray(Math.round(SR * PRE)), n = data.length, dv = new DataView(new ArrayBuffer(44 + n * 2));
+  let peak = .01; for (let i = 0; i < n; i++) peak = Math.max(peak, Math.abs(data[i]));
+  const W = (o, str) => [...str].forEach((ch, i) => dv.setUint8(o + i, ch.charCodeAt(0)));
+  W(0, 'RIFF'); dv.setUint32(4, 36 + n * 2, true); W(8, 'WAVEfmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+  dv.setUint32(24, SR, true); dv.setUint32(28, SR * 2, true); dv.setUint16(32, 2, true); dv.setUint16(34, 16, true); W(36, 'data'); dv.setUint32(40, n * 2, true);
+  for (let i = 0; i < n; i++) dv.setInt16(44 + i * 2, data[i] / peak * .9 * 32767, true);
+  song.src = URL.createObjectURL(new Blob([dv], { type:'audio/wav' }));
+  if (wantSong) song.play().catch(() => {});
+}
+setTimeout(() => renderSong().catch(() => {}), 300);   // ready long before she reaches "yes"
+function playSong(){ wantSong = true; song.volume = .85; if (song.src) song.play().catch(() => {}); $('#mute').hidden = false; }
+$('#mute').onclick = () => { song.muted = !song.muted; $('#mute').textContent = song.muted ? '🔇' : '🔊'; };
 
 /* ---------- floaty bits ---------- */
 function toast(m){ const t = $('#toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
