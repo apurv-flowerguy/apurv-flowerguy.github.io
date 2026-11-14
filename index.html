@@ -96,10 +96,11 @@ p{margin:0}
 @keyframes floatUp{to{transform:translate(var(--hx),-90px) scale(1.5);opacity:0}}
 #toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,90px);z-index:40;background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;transition:transform .35s;white-space:nowrap}
 #mute{position:fixed;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);white-space:nowrap;z-index:40;padding:10px 15px;border-radius:999px;border:0;background:#fff;color:var(--soft);font:700 13.5px/1 Nunito,system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 var(--line),0 0 0 1.5px var(--line) inset;touch-action:manipulation}
-#mute[hidden]{display:none}
-.music #s-flowers .eyebrow{visibility:hidden}
+#mute.glow{color:var(--rose-d);animation:glow 1.6s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 3px 0 var(--line),0 0 0 1.5px var(--line) inset,0 0 0 0 #e8a31700}50%{box-shadow:0 3px 0 var(--line),0 0 0 2px #e8a317 inset,0 0 18px 7px #e8a31799}}
+#s-flowers .eyebrow{visibility:hidden}
 #toast.show{transform:translate(-50%,0)}
-@media (max-height:600px){.music #s-ask .eyebrow{visibility:hidden}#bouquet{max-height:42dvh}.hand{font-size:19px;min-height:46px}}
+@media (max-height:600px){#s-ask .eyebrow{visibility:hidden}#bouquet{max-height:42dvh}.hand{font-size:19px;min-height:46px}}
 @media (prefers-reduced-motion:reduce){
   .pt,.grow,.stemline,.wrap,.sway,#whole,.pulse,.cheers *{animation:none!important;transform:none;stroke-dashoffset:0}
   #next,#legal{animation:none;opacity:1}
@@ -140,7 +141,7 @@ p{margin:0}
   </section>
 </main>
 <div id="petals" aria-hidden="true"></div>
-<button id="mute" hidden>🔇 Turn off the cheesy music</button>
+<button id="mute" class="glow">🎵 Tap for birthday music</button>
 <div id="toast" role="status"></div>
 
 <script>
@@ -331,7 +332,6 @@ function sayYes(){
   $('#choices').remove(); $('#askLine').remove();
   $('#send').hidden = false; $('#send').textContent = `Tell ${me || 'me'} 💌`;
   $('#ps').innerHTML = `P.S. Happy ${age ? nth(age) : 'birthday'}${her ? ', ' + her : ''}. First coffee's on me.`;
-  playSong();
   hearts(innerWidth / 2, innerHeight / 2);
   rain(70, 60); setInterval(() => rain(4, 0), 900);
 }
@@ -379,10 +379,14 @@ async function renderSong(){
   song.src = URL.createObjectURL(new Blob([dv], { type:'audio/wav' }));
   if (wantSong) song.play().catch(() => {});
 }
-setTimeout(() => renderSong().catch(() => {}), 300);   // ready before her first tap
-function playSong(){ wantSong = true; song.volume = .85; if (song.src) song.play().catch(() => {}); $('#mute').hidden = false; document.body.classList.add('music'); }
-document.addEventListener('click', playSong, { once:true });   // a birthday card sings on the first tap
-$('#mute').onclick = () => { song.muted = !song.muted; $('#mute').textContent = song.muted ? '🔊 Fine, bring the cheese back' : '🔇 Turn off the cheesy music'; };
+setTimeout(() => renderSong().catch(() => {}), 300);   // ready before she taps the music pill
+function playSong(){ wantSong = true; song.volume = .85; if (song.src) song.play().catch(() => {}); }
+// music stays off until she asks for it; the pill glows until its first tap
+$('#mute').onclick = () => {
+  const b = $('#mute'); b.classList.remove('glow');
+  if (song.paused){ playSong(); b.textContent = '🔇 Turn off the cheesy music'; }
+  else { wantSong = false; song.pause(); b.textContent = '🎵 Play the birthday music'; }
+};
 
 /* ---------- floaty bits ---------- */
 function toast(m){ const t = $('#toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
