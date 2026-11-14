@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Happy birthday 🌲</title>
+<meta name="description" content="Someone sent you birthday flowers.">
+<meta property="og:title" content="Happy birthday 🌲">
+<meta property="og:description" content="Someone sent you birthday flowers.">
+<meta name="theme-color" content="#d3e6ed">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌲</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1c3a30;--soft:#456559;--rose:#2f7d5b;--rose-d:#256b4b;--line:#cbdcd2;color-scheme:light}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;overflow-x:hidden}
+body{
+  min-height:100dvh;color:var(--ink);font:500 16px/1.5 Nunito,system-ui,sans-serif;
+  background:
+    radial-gradient(60vmax 40vmax at 15% 0%,#fff6d6cc,transparent 60%),
+    linear-gradient(180deg,#d3e6ed,#eaf1ea 55%,#f4f1e4);
+  background-attachment:fixed;
+}
+#scene{position:fixed;left:0;bottom:0;width:100%;height:32dvh;z-index:0;pointer-events:none}
+main{position:relative;z-index:1;max-width:460px;margin:0 auto;padding:18px 16px calc(24px + env(safe-area-inset-bottom));min-height:100dvh;display:flex}
+.screen{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;text-align:center;gap:12px}
+.screen.on{display:flex;animation:fadeUp .7s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+h1{font:700 clamp(30px,8.6vw,40px)/1.14 Fraunces,Georgia,serif;margin:0;letter-spacing:-.01em}
+h1 em{font-style:italic;font-weight:500;color:var(--rose)}
+p{margin:0}
+.eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--rose)}
+.sub{color:var(--soft);max-width:34ch;font-size:17px}
+.sub em{color:var(--rose);font-weight:700}
+.askline{font:700 21px/1.25 Fraunces,Georgia,serif;max-width:20ch}
+.askline em{font-style:italic;font-weight:500;color:var(--rose)}
+.hand{font-family:Caveat,cursive;font-size:23px;line-height:1.15;color:var(--rose-d);min-height:54px;display:flex;align-items:center}
+.tiny{font-size:13px;color:var(--soft)}
+.btn{
+  appearance:none;border:0;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none;font:800 17px/1 Nunito,system-ui,sans-serif;color:#fff;
+  padding:16px 26px;border-radius:999px;background:linear-gradient(180deg,#46a077,var(--rose-d));
+  box-shadow:0 6px 0 #174a34,0 14px 24px -8px #256b4b88;transition:transform .15s,box-shadow .15s;
+}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #174a34}
+.btn.ghost{background:#fff;color:var(--soft);box-shadow:0 4px 0 var(--line),0 0 0 1.5px var(--line) inset;font-weight:700;font-size:15px;padding:13px 20px}
+.btn.ghost.gave-up{background:linear-gradient(180deg,#46a077,var(--rose-d));color:#fff;box-shadow:0 6px 0 #174a34}
+.btn:focus-visible{outline:3px solid #7aa7ff;outline-offset:3px}
+.pulse{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.06)}}
+
+/* bouquet */
+#s-flowers{justify-content:flex-start;padding-top:8px;gap:6px}
+#bouquet{width:100%;max-height:50dvh;overflow:visible;user-select:none;touch-action:manipulation}
+#whole{transform-origin:200px 545px;animation:breeze 6s ease-in-out infinite alternate}
+@keyframes breeze{from{transform:rotate(-1.3deg)}to{transform:rotate(1.3deg)}}
+.pt,.grow{transform:scale(0);animation:open 1.1s cubic-bezier(.3,1.35,.5,1) both;animation-delay:calc(var(--d,0)*1s + var(--i,0)*80ms)}
+@keyframes open{to{transform:scale(1)}}
+.stemline{fill:none;stroke:#5c9a5a;stroke-width:3.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.2s ease-out both;animation-delay:calc(var(--d,0)*1s)}
+@keyframes draw{to{stroke-dashoffset:0}}
+.fl{cursor:pointer}
+.sway{animation:sway 4.5s ease-in-out infinite alternate;animation-delay:calc(var(--d,0)*-1s)}
+@keyframes sway{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
+.fl.wig .sway{animation:wig .55s ease}
+@keyframes wig{25%{transform:rotate(-15deg) scale(1.1)}60%{transform:rotate(12deg) scale(1.1)}}
+.wrap{animation:rise 1s cubic-bezier(.2,.8,.3,1) both}
+@keyframes rise{from{transform:translateY(70px);opacity:0}}
+#next{opacity:0;animation:fadeUp .8s 5.2s ease both,pulse 1.6s 6s ease-in-out infinite}
+#legal{opacity:0;animation:fadeUp .8s 5.6s ease both;max-width:36ch}
+
+/* the ask */
+.ecg{width:min(280px,76%);overflow:visible}
+.ecg path{fill:none;stroke:var(--rose);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.on .ecg path{animation:draw 2s .3s ease-out forwards}
+.ecg .hrt{fill:var(--rose);stroke:none;transform-box:fill-box;transform-origin:center;opacity:0}
+.on .ecg .hrt{animation:pop .5s 2s forwards,beat 1s 2.6s infinite}
+@keyframes pop{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.25)}30%{transform:scale(1)}45%{transform:scale(1.15)}}
+.cheers{width:190px;overflow:visible}
+.cheers .tl{transform-origin:70px 120px;animation:clinkL 1.8s ease-in-out infinite}
+.cheers .tr{transform-origin:130px 120px;animation:clinkR 1.8s ease-in-out infinite}
+@keyframes clinkL{0%,60%,100%{transform:rotate(-20deg)}30%{transform:rotate(-9deg)}}
+@keyframes clinkR{0%,60%,100%{transform:rotate(20deg)}30%{transform:rotate(9deg)}}
+.cheers .spark{opacity:0;animation:spark 1.8s ease-in-out infinite}
+@keyframes spark{25%{opacity:0}32%{opacity:1}55%{opacity:0}}
+.choices{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;min-height:64px;margin-top:6px}
+#yes{transform:scale(var(--grow,1));transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+#no{transition:transform .28s cubic-bezier(.34,1.4,.64,1);position:relative;z-index:5}
+
+#petals{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}
+.petal{position:absolute;top:-30px;width:16px;height:22px;border-radius:80% 0 80% 0;opacity:.85;animation:fall linear forwards}
+@keyframes fall{to{transform:translate3d(var(--dx),112vh,0) rotate(var(--rot))}}
+.heart{position:fixed;z-index:30;pointer-events:none;color:#e8a317;animation:floatUp 1s ease-out forwards}
+@keyframes floatUp{to{transform:translate(var(--hx),-90px) scale(1.5);opacity:0}}
+#toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,90px);z-index:40;background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;transition:transform .35s;white-space:nowrap}
+#mute{position:fixed;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);white-space:nowrap;z-index:40;padding:10px 15px;border-radius:999px;border:0;background:#fff;color:var(--soft);font:700 13.5px/1 Nunito,system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 var(--line),0 0 0 1.5px var(--line) inset;touch-action:manipulation}
+#mute[hidden]{display:none}
+.music #s-flowers .eyebrow{visibility:hidden}
+#toast.show{transform:translate(-50%,0)}
+@media (max-height:600px){.music #s-ask .eyebrow{visibility:hidden}#bouquet{max-height:42dvh}.hand{font-size:19px;min-height:46px}}
+@media (prefers-reduced-motion:reduce){
+  .pt,.grow,.stemline,.wrap,.sway,#whole,.pulse,.cheers *{animation:none!important;transform:none;stroke-dashoffset:0}
+  #next,#legal{animation:none;opacity:1}
+  .cheers .tl{transform:rotate(-14deg)}.cheers .tr{transform:rotate(14deg)}
+}
+</style>
+</head>
+<body>
+<svg id="scene" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
+<main>
+  <!-- 1 · the flowers -->
+  <section class="screen on" id="s-flowers">
+    <p class="eyebrow">A birthday bouquet</p>
+    <h1 id="hello"></h1>
+    <svg id="bouquet" viewBox="0 8 400 552" role="img" aria-label="A bouquet of wildflowers from Olympic National Park"></svg>
+    <p class="hand" id="caption">plucked fresh from Olympic National Park*</p>
+    <button class="btn" id="next">One more thing →</button>
+    <p class="tiny" id="legal">*Kidding — that's a federal offense (36 CFR § 2.1). I drew them. Tap one. 🌲</p>
+  </section>
+
+  <!-- 2 · the ask -->
+  <section class="screen" id="s-ask">
+    <p class="eyebrow" id="askEyebrow"></p>
+    <h1 id="askTitle"></h1>
+    <svg class="cheers" viewBox="0 0 200 135" aria-hidden="true">
+      <g class="spark" stroke="#e8a317" stroke-width="3" stroke-linecap="round"><path d="M100 8V22M82 14l6 12M118 14l-6 12"/></g>
+      <g class="tl"><path d="M54 62h-9a8 8 0 0 0-8 8v16a8 8 0 0 0 8 8h9" fill="none" stroke="#e6cdb9" stroke-width="6"/><rect x="52" y="44" width="36" height="68" rx="6" fill="#ffc94d" stroke="#e0a100" stroke-width="1.5"/><path d="M60 54V102" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".6"/><path d="M48 48a8 8 0 0 1 8-12a10 10 0 0 1 18-2a8 8 0 0 1 14 6a7 7 0 0 1 2 12H50a6 6 0 0 1-2-4Z" fill="#fff" stroke="#eadfce" stroke-width="1.5"/><rect x="59" y="72" width="26" height="15" rx="7.5" fill="#fff"/><text x="72" y="83" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="800" font-size="9.5" fill="#256b4b" id="mugAge">21</text></g>
+      <g class="tr"><path d="M146 62h9a8 8 0 0 1 8 8v16a8 8 0 0 1-8 8h-9" fill="none" stroke="#e6cdb9" stroke-width="6"/><rect x="112" y="44" width="36" height="68" rx="6" fill="#ffc94d" stroke="#e0a100" stroke-width="1.5"/><path d="M120 54V102" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".6"/><path d="M108 48a8 8 0 0 1 8-12a10 10 0 0 1 18-2a8 8 0 0 1 14 6a7 7 0 0 1 2 12H110a6 6 0 0 1-2-4Z" fill="#fff" stroke="#eadfce" stroke-width="1.5"/><rect x="115" y="72" width="26" height="15" rx="7.5" fill="#fff"/><text x="128" y="83" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="800" font-size="9.5" fill="#256b4b">0.0%</text></g>
+    </svg>
+    <p class="sub" id="askSub"></p>
+    <p class="askline" id="askLine">I'd love to see you for <em>coffee</em> or something. ☕</p>
+    <div class="choices" id="choices">
+      <button class="btn" id="yes">Yes to coffee ☕</button>
+      <button class="btn ghost" id="no">No</button>
+    </div>
+    <button class="btn pulse" id="send" hidden></button>
+    <p class="tiny" id="ps">You have the right to remain silent. Anything you say can and will be used to plan coffee.</p>
+  </section>
+</main>
+<div id="petals" aria-hidden="true"></div>
+<button id="mute" hidden>🔇 Turn off the cheesy music</button>
+<div id="toast" role="status"></div>
+
+<script>
+/* ✏️ one entry per person. Her link is  …/?to=<id>  — add a line here to make a card for someone else.
+   Without a known id the card shows no name and no age. */
+const PEOPLE = {
+  hailey: { name:'Hailey', age:21 },
+};
+const CONFIG = { myName: 'Apurv' };
+
+const $ = s => document.querySelector(s);
+const who = PEOPLE[(new URLSearchParams(location.search).get('to') || '').trim().toLowerCase()] || {};
+const her = who.name || '', age = who.age, me = CONFIG.myName.trim();
+const nth = n => n + (['th','st','nd','rd'][(n % 100 - 20) % 10] || ['th','st','nd','rd'][n % 100] || 'th');
+
+/* ---------- lilies ---------- */
+const PETAL = 'M0 2C10-4 19-22 13-38C10-46 4-52 0-58C-4-52-10-46-13-38C-19-22-10-4 0 2Z';
+const BAND = 'M0-4C6-14 7-34 0-50C-7-34-6-14 0-4Z';
+const ROUND = 'M0 0C12-4 20-20 14-34C10-44-10-44-14-34C-20-20-12-4 0 0Z';
+const SPECKS = [[-3,-14],[3,-18],[-2,-24],[4,-29],[0,-34],[-5,-21],[2,-11],[-1,-40],[6,-23],[-6,-30]];
+const KINDS = {
+  avalanche: { name:'Avalanche lily — blooms as the snow melts on Hurricane Ridge', g:['#ffd83b','#ffffff','#ffffff'], edge:'#c9d3cd', anther:'#f2b632', throat:'#ffe26b' },
+  glacier:   { name:'Glacier lily — sunshine, even next to a snowbank', g:['#ffa800','#ffdc3d','#fff3a8'], edge:'#eab92d', anther:'#c97a1a', throat:'#d7e77a' },
+  columbia:  { name:'Columbia tiger lily — freckled and fierce', g:['#ff6a13','#ff8f2e','#ffb765'], band:'#ff741a', edge:'#e8741a', speck:'#4a1408', anther:'#4a2210', throat:'#ffd766' },
+  bellflower:{ name:"Piper's bellflower — found only in the Olympic Mountains", n:5, w:1.25, g:['#5a4fd1','#8079ee','#b9b3fb'], edge:'#5546c4', anther:'#ffffff', throat:'#efeaff' },
+  violet:    { name:"Flett's violet — found only in the Olympic Mountains", g:['#e9c93f','#6f3fc4','#9b78e6'], edge:'#4a2496' },
+  arnica:    { name:'Mountain arnica — a little sun for the meadow', n:12, w:.5, st:0, r:10, disk:1, g:['#ff9d00','#ffc62b','#ffe57a'], edge:'#e0a100', anther:'#8a4b1f', throat:'#d98e14' },
+  phlox:     { name:'Spreading phlox — carpets the rocky ridges in white', n:5, w:1.15, round:1, st:0, r:4.5, g:['#e4d8fb','#ffffff','#ffffff'], edge:'#cbc2e2', anther:'#f2c94c', throat:'#f2c94c' },
+  trillium:  { name:'Pacific trillium — straight off the Hoh Rain Forest floor', n:3, w:1.5, g:['#eef6dc','#ffffff','#ffffff'], edge:'#c9d3cd', anther:'#f2b632', throat:'#e4efb8' },
+};
+/* n = petal count: 6 (default) is a lily, two whorls of three; 5 and 3 are single whorls of wider petals (w) */
+function lily(k){
+  const c = KINDS[k], n = c.n || 6, st = c.st ?? (n === 5 ? 5 : 6), r0 = c.r || 6.5; let s = '';
+  if (n === 3) for (let i = 0; i < 3; i++) s += `<g transform="rotate(${i*120 + 60}) scale(.8 .86)"><path class="pt" d="${PETAL}" fill="#6fb06b" stroke="#4f8a4e"/></g>`;
+  for (let i = 0; i < n; i++)
+    s += `<g transform="rotate(${n === 6 ? (i % 3)*120 + (i > 2 ? 60 : 0) : i*360/n}) scale(${n === 6 ? (i > 2 ? '1.1 1' : '.92 1.05') : c.w + ' .9'})"><g class="pt" style="--i:${i}">
+      <path d="${c.round ? ROUND : PETAL}" fill="url(#g-${k})" stroke="${c.edge}" stroke-width="1"/>
+      ${c.band ? `<path d="${BAND}" fill="${c.band}" opacity=".82"/>` : ''}
+      ${c.round ? '' : `<path d="M0-5C1.5-20 1-36 0-52" fill="none" stroke="${c.band || c.edge}" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>`}
+      ${c.speck ? SPECKS.map(([x,y]) => `<circle cx="${x}" cy="${y}" r="1.1" fill="${c.speck}"/>`).join('') : ''}</g></g>`;
+  s += `<g class="grow" style="--i:9"><circle r="${r0}" fill="${c.throat}"/>`;
+  for (let i = 0; i < st; i++)
+    s += `<g transform="rotate(${(i + .5)*360/st})"><path d="M0 0Q4-12 0-25" fill="none" stroke="${c.throat}" stroke-width="1.6"/>
+      <ellipse cx="0" cy="-27" rx="2.4" ry="5.5" fill="${c.anther}" transform="rotate(${i%2 ? 30 : -30} 0 -27)"/></g>`;
+  if (c.disk) for (let i = 0; i < 8; i++) s += `<circle cx="${Math.cos(i*.785)*r0*.6}" cy="${Math.sin(i*.785)*r0*.6}" r="1.3" fill="${c.anther}"/>`;
+  return s + `<circle r="${r0*.4}" fill="${c.disk ? c.anther : '#f4f8d8'}"/></g>`;
+}
+/* a true violet: two upper petals, two side petals, one veined lower petal, yellow eye */
+const violet = () => [[-26,1,1],[26,1,1],[-98,.95,.95],[98,.95,.95],[180,1.25,1.05]].map(([a,sx,sy], i) =>
+  `<g transform="rotate(${a}) scale(${sx} ${sy})"><g class="pt" style="--i:${i}"><path d="${ROUND}" fill="url(#g-violet)" stroke="${KINDS.violet.edge}" stroke-width="1"/>
+    ${i > 1 ? `<path d="M0-7V-27M-2-7L-6-23M2-7L6-23" stroke="#2a0f5c" stroke-width="1.1" stroke-linecap="round" opacity=".75"/>` : ''}</g></g>`).join('') +
+  `<g class="grow" style="--i:6"><circle r="5.5" fill="#ffd23f" stroke="#e8a317"/><circle r="2" fill="#fff8d6"/></g>`;
+const beargrass = () => `<g class="grow"><path d="M0 0C-15-10-13-42 0-56C13-42 15-10 0 0Z" fill="#fbf6dc" stroke="#ddd3a0" stroke-width="1"/>` +
+  [[0,-10],[-5,-18],[5,-20],[0,-27],[-6,-31],[6,-34],[0,-40],[-3,-47],[3,-48]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="2.1" fill="#fff" stroke="#e3d9a8" stroke-width=".6"/>`).join('') + `</g>`;
+const lupine = () => `<g class="grow"><path d="M0 0V-104" stroke="#5c9a5a" stroke-width="3" stroke-linecap="round"/>` +
+  [...Array(11)].map((_, i) => { const y = -14 - i*8.4, w = 12 - i*.95, col = i > 7 ? '#b9adf7' : i > 3 ? '#8f80ee' : '#6c5ce0';
+    return [-1, 1].map(d => `<ellipse cx="${d*w*.6}" cy="${y}" rx="${w*.62}" ry="4.8" fill="${col}" stroke="#5546c4" stroke-width=".8" transform="rotate(${d*22} ${d*w*.6} ${y})"/>`).join('') +
+      `<circle cx="0" cy="${y - 1}" r="${w*.16}" fill="#fff" opacity=".85"/>`; }).join('') + `</g>`;
+const paintbrush = () => `<g class="grow"><path d="M0 0V-16" stroke="#5c9a5a" stroke-width="3"/>` +
+  [[-46,.7,0],[46,.7,0],[-28,.9,-6],[28,.9,-6],[-12,1.05,-12],[12,1.05,-12],[0,1.15,-16]].map(([a,k,y], i) =>
+    `<path transform="translate(0 ${y}) rotate(${a}) scale(${k})" d="M0 0C-6-10-5-28 0-40C5-28 6-10 0 0Z" fill="${i % 2 ? '#d93a1f' : '#f0603a'}" stroke="#a82a14" stroke-width="1"/>`).join('') + `</g>`;
+const BELL = 'M0 0C-7 0-8 7-7 11L-4 9.3L0 12L4 9.3L7 11C8 7 7 0 0 0Z';
+const valley = () => `<g class="grow"><path d="M0 0C0-30-8-52-40-58" fill="none" stroke="#5c9a5a" stroke-width="2.4" stroke-linecap="round"/>` +
+  [[-1,-14,1],[-3.6,-28,1],[-10,-41,.92],[-20,-50.6,.82],[-33,-56,.7],[-40,-58,.55]].map(([x,y,k]) =>
+    `<path d="M${x} ${y}q-3 3-5 8" fill="none" stroke="#b5523a" stroke-width="1.3"/><path transform="translate(${x-5} ${y+8}) scale(${k}) rotate(12)" d="${BELL}" fill="#fff" stroke="#c9d8bd" stroke-width="1.1"/>`).join('') + `</g>`;
+const breath = () => `<g class="grow">` + [[0,0,4],[-9,5,3.2],[8,6,3.4],[-3,-9,3],[10,-6,2.8],[-12,-5,2.6]].map(([x,y,r]) =>
+  `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="#d2dcd6" stroke-width=".8"/><circle cx="${x}" cy="${y}" r="${r*.3}" fill="#ffe08a"/>`).join('') + `</g>`;
+
+/* sword fern frond: a zig-zag of pinnae up one side of the rachis and back down the other */
+const FROND = (() => { let l = 'M0 0', r = ''; for (let i = 0; i < 20; i++){ const y = -18 - i*12, w = 4 + 17*Math.sin(Math.PI*(i + 3)/26); l += `L${-w} ${y - 3}L-1.2 ${y - 9}`; r = `L1.2 ${y - 9}L${w} ${y - 3}` + r; } return l + 'L0-268' + r + 'Z'; })();
+/* x, y, scale, rotation, bloom-delay(s) */
+const BACK = [
+  ...[[44,262],[356,262],[108,112],[300,106],[160,30],[244,28]].map(([x,y], i) => ({ art:breath, name:"Pearly everlasting — it's in the name", x, y, s:1.15, r:0, d:1.3 + i*.1 })),
+  { art:beargrass, name:'Beargrass — a creamy plume above the meadow', x:200, y:70, s:1.1, r:0, d:1.4 },
+  { art:lupine, name:'Broadleaf lupine — turns whole slopes purple', x:84,  y:226, s:1.1, r:-30, d:1.0 },
+  { art:lupine, name:'Broadleaf lupine — turns whole slopes purple', x:318, y:226, s:1.1, r:24,  d:1.2 },
+  { art:paintbrush, name:"Paintbrush — red-orange tufts, the meadow's highlighter", x:150, y:88, s:1.1, r:-16, d:1.5 },
+  { art:paintbrush, name:"Paintbrush — red-orange tufts, the meadow's highlighter", x:256, y:84, s:1.1, r:14,  d:1.6 },
+  { art:valley, name:"White mountain-heather — tiny bells from the high country", x:74,  y:330, s:1.45, r:-8, d:1.7 },
+  { art:valley, name:"White mountain-heather — tiny bells from the high country", x:326, y:330, s:1.45, r:8,  d:1.8, flip:1 },
+];
+const LILIES = [
+  ['violet',200,128,1.15,0],['phlox',120,180,1.05,20],['columbia',282,178,1.08,-15],['glacier',88,276,.98,10],
+  ['trillium',314,276,1,35],['bellflower',140,334,.9,-10],['arnica',262,334,.9,15],['avalanche',200,242,1.35,30],
+].map(([k,x,y,s,r], i) => ({ k, art:() => (k === 'violet' ? violet() : lily(k)), name:KINDS[k].name, x, y, s, r, d:2 + i*.36, shadow:1 }));
+
+function buildBouquet(){
+  const grads = Object.entries(KINDS).map(([k,c]) => `<linearGradient id="g-${k}" x1="0" y1="1" x2="0" y2="0">
+    <stop offset="0" stop-color="${c.g[0]}"/><stop offset=".45" stop-color="${c.g[1]}"/><stop offset="1" stop-color="${c.g[2]}"/></linearGradient>`).join('');
+  const leaves = [[-64,.78],[-47,.95],[-30,1.05],[-12,1.1],[12,1.1],[30,1.05],[47,.95],[64,.78]].map(([a,l], i) =>
+    `<g transform="translate(200 420) rotate(${a}) scale(${l})"><g class="grow" style="--d:${.5 + i*.06}"><path d="${Math.abs(a) > 40 ? FROND : 'M0 0C-17-70-12-200 0-262C12-200 17-70 0 0Z'}" fill="url(#leaf)"/><path d="M0-6V-250" stroke="#8cc487" stroke-width="1.4" opacity=".7"/></g></g>`).join('');
+  const all = [...BACK, ...LILIES];
+  const stems = all.map(f => `<path class="stemline" pathLength="1" style="--d:${Math.max(.3, f.d - .9)}" d="M200 440Q${(200 + f.x)/2 + (f.x - 200)*.25} ${f.y + 90} ${f.x} ${f.y}"/>`).join('');
+  const flowers = all.map((f, i) => `<g transform="translate(${f.x} ${f.y})"><g class="fl" data-i="${i}" ${f.shadow ? 'filter="url(#sh)"' : ''} style="--d:${f.d}"><g class="sway" style="--d:${(i * .7) % 4}">
+    <g transform="rotate(${f.r}) scale(${f.flip ? -f.s : f.s} ${f.s})" style="--d:${f.d}">${f.art()}</g></g></g></g>`).join('');
+  $('#bouquet').innerHTML = `<defs>${grads}
+    <linearGradient id="leaf" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#3f7d45"/><stop offset="1" stop-color="#7dbb74"/></linearGradient>
+    <linearGradient id="paperL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ecd6ad"/><stop offset="1" stop-color="#d4b480"/></linearGradient>
+    <linearGradient id="paperR" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3e1bd"/><stop offset="1" stop-color="#dcbe8b"/></linearGradient>
+    <filter id="sh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="3.5" flood-color="#1c3a30" flood-opacity=".28"/></filter></defs>
+    <g id="whole">
+      <g class="wrap"><path d="M82 318L200 286L318 318L200 548Z" fill="#b9965f" stroke="#a07f4c" stroke-width="1.5"/></g>
+      ${leaves}${stems}${flowers}
+      <g class="wrap">
+        <path d="M74 322C112 352 168 384 232 402L204 550Z" fill="url(#paperL)" stroke="#b8975f" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M326 322C288 352 236 382 172 402L196 550Z" fill="url(#paperR)" stroke="#b8975f" stroke-width="1.5" stroke-linejoin="round"/>
+        <g transform="translate(200 470)" fill="#2f7d5b" stroke="#1c5a40" stroke-width="1.3" stroke-linejoin="round">
+          <path d="M-3 4C-14 22-20 40-18 58L-8 50L-2 60C-4 40 0 20 3 4Z"/><path d="M3 4C14 22 20 40 18 58L8 50L2 60C4 40 0 20-3 4Z" fill="#46a077"/>
+          <path d="M0 0C-16-20-42-20-40-2C-38 14-14 10 0 0Z"/><path d="M0 0C16-20 42-20 40-2C38 14 14 10 0 0Z" fill="#46a077"/>
+          <rect x="-8" y="-8" width="16" height="16" rx="5"/></g>
+      </g>
+    </g>`;
+  return all;
+}
+
+/* ---------- backdrop: Mount Olympus, a nearer ridge, two rows of evergreens ---------- */
+(() => {
+  let seed = 7, far = '', near = '';
+  const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+  const tree = (x, b, h, w) => `M${x - w} ${b}L${x} ${b - h}L${x + w} ${b}Z`;
+  for (let x = -10; x < 410; x += 12 + rnd() * 8) far += tree(x, 172, 30 + rnd() * 30, 8 + rnd() * 4);
+  for (let x = -10; x < 410; x += 16 + rnd() * 10) near += tree(x, 200, 42 + rnd() * 44, 10 + rnd() * 5);
+  $('#scene').innerHTML = `<path d="M0 118L38 86L66 100L112 52L150 92L192 36L228 82L262 58L304 96L342 70L400 108V200H0Z" fill="#c9dbe1"/>
+    <path d="M112 52l-13 15 9-3 5 6 5-7 9 6zM192 36l-15 18 10-4 6 8 6-9 10 6zM262 58l-11 13 8-3 4 6 5-7 7 4z" fill="#fff"/>
+    <path d="M0 150L60 118L112 142L172 108L232 140L292 114L350 142L400 126V200H0Z" fill="#b3cec7"/>
+    <path d="${far}M0 172H400V200H0Z" fill="#9cc2b1"/><path d="${near}" fill="#84b29e"/>`;
+})();
+
+/* ---------- page 1 ---------- */
+$('#hello').innerHTML = `Happy ${age ? nth(age) + ' ' : ''}birthday${her ? ', <em>' + her + '</em>' : ''} 🎂`;
+const ALL = buildBouquet();
+$('#bouquet').addEventListener('click', e => {
+  const fl = e.target.closest('.fl'); if (!fl) return;
+  fl.classList.remove('wig'); void fl.getBoundingClientRect(); fl.classList.add('wig');
+  $('#caption').textContent = ALL[fl.dataset.i].name;
+  hearts(e.clientX, e.clientY);
+});
+const drift = setInterval(() => rain(1, 0), 1300);
+$('#next').onclick = () => {
+  clearInterval(drift);
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 's-ask'));
+  window.scrollTo(0, 0);
+};
+
+/* ---------- page 2 ---------- */
+$('#askEyebrow').textContent = her ? `One more thing, ${her}` : 'One more thing';
+$('#askTitle').innerHTML = `Cheers to <em>${age || 'you'}</em>! 🍻`;
+$('#askSub').innerHTML = `${age === 21 ? 'You can order the real thing now. ' : ''}I'll be the one cheering with a <em>non‑alcoholic</em> beer, since I don't drink much.`;
+$('#mugAge').textContent = age || '★';
+const NO_TEXT = ['No', 'Objection — overruled', 'Motion denied', 'Resisting coffee? Bold.', "That's obstruction…", 'Final warning, counselor'];
+let noCount = 0, lastDodge = -1e9;
+const yesBtn = $('#yes'), noBtn = $('#no');
+function dodge(e){
+  if (noBtn.classList.contains('gave-up')) return;
+  e.preventDefault();
+  // one tap = one dodge: a phone tap fires pointerdown AND click, so ignore anything within 350ms
+  if (e.timeStamp - lastDodge < 350) return;
+  lastDodge = e.timeStamp;
+  if (navigator.vibrate) navigator.vibrate(25);
+  if (++noCount >= NO_TEXT.length){
+    noBtn.textContent = 'I plead guilty: YES ☕'; noBtn.classList.add('gave-up'); noBtn.style.transform = '';
+    setTimeout(() => noBtn.onclick = sayYes, 600); // after this tap's own click has passed, so she sees it give up first
+    return;
+  }
+  noBtn.textContent = NO_TEXT[noCount];
+  yesBtn.style.setProperty('--grow', 1 + noCount * .05);
+  // measure the un-moved spot with transitions off, so rapid taps mid-flight can't drift it off-screen
+  const prev = noBtn.style.transform;
+  noBtn.style.transition = 'none'; noBtn.style.transform = 'none';
+  const r = noBtn.getBoundingClientRect(), y = yesBtn.getBoundingClientRect(), pad = 12;
+  noBtn.style.transform = prev; void noBtn.offsetWidth; noBtn.style.transition = '';
+  let L, T, tries = 0;
+  do {
+    L = pad + Math.random() * Math.max(1, innerWidth - r.width - pad * 2);
+    T = pad + Math.random() * Math.max(1, innerHeight - r.height - pad * 2);
+  } while (++tries < 20 && L < y.right + 16 && L + r.width > y.left - 16 && T < y.bottom + 16 && T + r.height > y.top - 16);
+  noBtn.style.transform = `translate(${L - r.left}px,${T - r.top}px) rotate(${(Math.random() * 16 - 8) | 0}deg)`;
+}
+noBtn.addEventListener('pointerdown', dodge);
+noBtn.addEventListener('mouseenter', e => { if (matchMedia('(hover:hover)').matches) dodge(e); });
+noBtn.addEventListener('click', e => { if (noBtn.classList.contains('gave-up')) return; e.detail === 0 ? dodge(e) : e.preventDefault(); }); // detail 0 = keyboard
+yesBtn.onclick = sayYes;
+
+function sayYes(){
+  $('#askEyebrow').textContent = 'Verdict · guilty of saying yes';
+  $('#askTitle').innerHTML = `It's a <em>plan!</em> ☕`;
+  $('#askSub').innerHTML = `Best verdict I've had all week. For the record, the court needs your <em>number</em> on file — you can send it straight to ${me || 'me'}. 📱`;
+  $('#choices').remove(); $('#askLine').remove();
+  $('#send').hidden = false; $('#send').textContent = `Tell ${me || 'me'} 💌`;
+  $('#ps').innerHTML = `P.S. Happy ${age ? nth(age) : 'birthday'}${her ? ', ' + her : ''}. First coffee's on me.`;
+  playSong();
+  hearts(innerWidth / 2, innerHeight / 2);
+  rain(70, 60); setInterval(() => rain(4, 0), 900);
+}
+$('#send').onclick = async () => {
+  const text = `The verdict is in: coffee is a YES ☕🌲${her ? ' — ' + her : ''}\n📱 My number: `;
+  try {
+    if (navigator.share) return await navigator.share({ text });
+    await navigator.clipboard.writeText(text); toast(`Copied! Now paste it to ${me || 'me'} 😌`);
+  } catch (err) { if (err.name !== 'AbortError') toast(`Just text ${me || 'me'}: "yes" 🌸`); }
+};
+
+/* ---------- music: a music-box Happy Birthday, synthesised and pre-rendered in the browser (no file to download) ---------- */
+const song = new Audio(); song.loop = true;
+let wantSong = false;
+const midi = n => { const m = /^([A-G])(#?)(\d)$/.exec(n); return 12 * (+m[3] + 1) + { C:0, D:2, E:4, F:5, G:7, A:9, B:11 }[m[1]] + (m[2] ? 1 : 0); };
+async function renderSong(){
+  const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if (!OAC) return;
+  const B = .55, LOOP = B * 24, SR = 44100;                         // 8 bars of 3/4
+  const PRE = B * 3;                                                // pre-roll the loop's last bar, then cut it off, so its tails wrap seamlessly
+  const ctx = new OAC(1, Math.ceil(SR * (LOOP + PRE)), SR);
+  const out = ctx.createGain(); out.connect(ctx.destination);
+  const dl = ctx.createDelay(1), fb = ctx.createGain(); dl.delayTime.value = .3; fb.gain.value = .28;
+  out.connect(dl); dl.connect(fb); fb.connect(dl); fb.connect(ctx.destination);
+  const tone = (t, n, g, dec, type = 'sine') => [[1, g, dec], [4, g * .12, dec * .35]].forEach(([k, a, d], j) => {
+    const o = ctx.createOscillator(), v = ctx.createGain();
+    o.type = j ? 'sine' : type; o.frequency.value = 440 * 2 ** ((midi(n) - 69) / 12) * k;
+    v.gain.setValueAtTime(0, t); v.gain.linearRampToValueAtTime(a, t + .008); v.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(v); v.connect(out); o.start(t); o.stop(t + d + .05);
+  });
+  const CH = { D:['D3','F#3','A3'], A:['A2','E3','A3'], G:['G2','D3','B3'] }, BARS = ['D','A','A','D','D','G','D','D'];
+  // the loop starts on bar 1; the two pickup notes sit at its very end, so playback is started one beat before the end
+  const TUNE = 'B4:1 A4:1 D5:1 C#5:2 A4:.75 A4:.25 B4:1 A4:1 E5:1 D5:2 A4:.75 A4:.25 A5:1 F#5:1 D5:1 C#5:1 B4:1 G5:.75 G5:.25 F#5:1 D5:1 E5:1 D5:2 A4:.75 A4:.25';
+  const ev = []; let at = 0;
+  TUNE.split(' ').forEach(x => { const [n, len] = x.split(':'); ev.push([at * B, n, .22, 1.7]); at += +len; });
+  BARS.forEach((c, i) => CH[c].forEach((n, j) => ev.push([(i * 3 + j) * B, n, j ? .08 : .18, j ? 1 : 2, j ? 'sine' : 'triangle'])));
+  ev.forEach(([t, ...a]) => { if (t >= LOOP - PRE) tone(t - (LOOP - PRE), ...a); tone(PRE + t, ...a); });
+  const buf = await new Promise(res => { ctx.oncomplete = e => res(e.renderedBuffer); const p = ctx.startRendering(); if (p && p.then) p.then(res); });
+  const data = buf.getChannelData(0).subarray(Math.round(SR * PRE)), n = data.length, dv = new DataView(new ArrayBuffer(44 + n * 2));
+  let peak = .01; for (let i = 0; i < n; i++) peak = Math.max(peak, Math.abs(data[i]));
+  const W = (o, str) => [...str].forEach((ch, i) => dv.setUint8(o + i, ch.charCodeAt(0)));
+  W(0, 'RIFF'); dv.setUint32(4, 36 + n * 2, true); W(8, 'WAVEfmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+  dv.setUint32(24, SR, true); dv.setUint32(28, SR * 2, true); dv.setUint16(32, 2, true); dv.setUint16(34, 16, true); W(36, 'data'); dv.setUint32(40, n * 2, true);
+  for (let i = 0; i < n; i++) dv.setInt16(44 + i * 2, data[i] / peak * .9 * 32767, true);
+  song.addEventListener('loadedmetadata', () => { song.currentTime = LOOP - B; }, { once:true });
+  song.src = URL.createObjectURL(new Blob([dv], { type:'audio/wav' }));
+  if (wantSong) song.play().catch(() => {});
+}
+setTimeout(() => renderSong().catch(() => {}), 300);   // ready before her first tap
+function playSong(){ wantSong = true; song.volume = .85; if (song.src) song.play().catch(() => {}); $('#mute').hidden = false; document.body.classList.add('music'); }
+document.addEventListener('click', playSong, { once:true });   // a birthday card sings on the first tap
+$('#mute').onclick = () => { song.muted = !song.muted; $('#mute').textContent = song.muted ? '🔊 Fine, bring the cheese back' : '🔇 Turn off the cheesy music'; };
+
+/* ---------- floaty bits ---------- */
+function toast(m){ const t = $('#toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
+function hearts(x, y){
+  for (let k = 0; k < 5; k++){
+    const h = document.createElement('span');
+    h.className = 'heart'; h.textContent = '✦';
+    h.style.cssText = `left:${x - 8}px;top:${y - 10}px;--hx:${(Math.random() * 90 - 45) | 0}px;animation-delay:${k * 70}ms;font-size:${14 + Math.random() * 12}px`;
+    document.body.appendChild(h); setTimeout(() => h.remove(), 1500);
+  }
+}
+const PETAL_COLORS = ['#ffffff', '#ffd23f', '#ffa94d', '#8f80ee', '#9dd3a8', '#6fb06b'];
+function rain(n, gap){
+  if (matchMedia('(prefers-reduced-motion:reduce)').matches) n = Math.min(n, 6);
+  for (let i = 0; i < n; i++) setTimeout(() => {
+    const p = document.createElement('i'), k = .6 + Math.random() * .9;
+    p.className = 'petal';
+    p.style.cssText = `left:${Math.random() * 100}vw;background:${PETAL_COLORS[(Math.random() * PETAL_COLORS.length) | 0]};width:${16 * k}px;height:${22 * k}px;
+      --dx:${(Math.random() * 160 - 80) | 0}px;--rot:${(Math.random() * 720 - 360) | 0}deg;animation-duration:${5 + Math.random() * 4}s`;
+    $('#petals').appendChild(p); setTimeout(() => p.remove(), 9500);
+  }, i * gap);
+}
+</script>
+</body>
+</html>
