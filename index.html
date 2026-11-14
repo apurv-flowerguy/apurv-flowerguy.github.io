@@ -61,6 +61,15 @@ p{margin:0}
 .stemline{fill:none;stroke:#5c9a5a;stroke-width:3.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.2s ease-out both;animation-delay:calc(var(--d,0)*1s)}
 @keyframes draw{to{stroke-dashoffset:0}}
 .fl{cursor:pointer}
+.halo,.ring{opacity:0;pointer-events:none}
+.ring{fill:none;stroke:#ffc400;stroke-width:3.5}
+.fl.hint{animation:nudge 1.6s ease-in-out 5.4s infinite}
+.fl.hint .halo{animation:halo 1.6s ease-in-out 5.4s infinite}
+.fl.hint .ring{animation:ring 1.6s ease-out 5.4s infinite}
+.fl.hint .ring.r2{animation-delay:6.2s}
+@keyframes nudge{50%{transform:scale(1.06)}}
+@keyframes halo{0%,100%{opacity:.15;transform:scale(.8)}50%{opacity:.62;transform:scale(1.04)}}
+@keyframes ring{0%{opacity:.6;transform:scale(.9)}100%{opacity:0;transform:scale(1.8)}}
 .sway{animation:sway 4.5s ease-in-out infinite alternate;animation-delay:calc(var(--d,0)*-1s)}
 @keyframes sway{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
 .fl.wig .sway{animation:wig .55s ease}
@@ -104,6 +113,7 @@ p{margin:0}
 @media (prefers-reduced-motion:reduce){
   .pt,.grow,.stemline,.wrap,.sway,#whole,.pulse,.cheers *{animation:none!important;transform:none;stroke-dashoffset:0}
   #next,#legal{animation:none;opacity:1}
+  .fl.hint,.fl.hint .ring{animation:none}.fl.hint .halo{animation:none;opacity:.6}
   .cheers .tl{transform:rotate(-14deg)}.cheers .tr{transform:rotate(14deg)}
 }
 </style>
@@ -141,19 +151,20 @@ p{margin:0}
   </section>
 </main>
 <div id="petals" aria-hidden="true"></div>
-<button id="mute" class="glow">🎵 Tap for birthday music</button>
+<button id="mute" class="glow">🎵 Play the cheesy music</button>
 <div id="toast" role="status"></div>
 
 <script>
-/* ✏️ one entry per person. Her link is  …/?to=<id>  — add a line here to make a card for someone else.
-   Without a known id the card shows no name and no age. */
+/* ✏️ one entry per person, keyed by a number so her name never shows in the link.
+   Her link is  …/<id>  e.g. …/243. To make a card for someone else: add a line here AND copy 243.html to <id>.html
+   (that file only loads this page under the new address). Without a known id the card shows no name and no age. */
 const PEOPLE = {
-  hailey: { name:'Hailey', age:21 },
+  243: { name:'Hailey', age:21 },
 };
 const CONFIG = { myName: 'Apurv' };
 
 const $ = s => document.querySelector(s);
-const who = PEOPLE[(new URLSearchParams(location.search).get('to') || '').trim().toLowerCase()] || {};
+const who = [location.pathname.split('/').filter(Boolean).pop() || '', location.hash.slice(1), location.search.slice(1)].map(x => PEOPLE[x.replace(/\.html$/, '')]).find(Boolean) || {};
 const her = who.name || '', age = who.age, me = CONFIG.myName.trim();
 const nth = n => n + (['th','st','nd','rd'][(n % 100 - 20) % 10] || ['th','st','nd','rd'][n % 100] || 'th');
 
@@ -235,9 +246,10 @@ function buildBouquet(){
     `<g transform="translate(200 420) rotate(${a}) scale(${l})"><g class="grow" style="--d:${.5 + i*.06}"><path d="${Math.abs(a) > 40 ? FROND : 'M0 0C-17-70-12-200 0-262C12-200 17-70 0 0Z'}" fill="url(#leaf)"/><path d="M0-6V-250" stroke="#8cc487" stroke-width="1.4" opacity=".7"/></g></g>`).join('');
   const all = [...BACK, ...LILIES];
   const stems = all.map(f => `<path class="stemline" pathLength="1" style="--d:${Math.max(.3, f.d - .9)}" d="M200 440Q${(200 + f.x)/2 + (f.x - 200)*.25} ${f.y + 90} ${f.x} ${f.y}"/>`).join('');
-  const flowers = all.map((f, i) => `<g transform="translate(${f.x} ${f.y})"><g class="fl" data-i="${i}" ${f.shadow ? 'filter="url(#sh)"' : ''} style="--d:${f.d}"><g class="sway" style="--d:${(i * .7) % 4}">
-    <g transform="rotate(${f.r}) scale(${f.flip ? -f.s : f.s} ${f.s})" style="--d:${f.d}">${f.art()}</g></g></g></g>`).join('');
+  const flowers = all.map((f, i) => `<g transform="translate(${f.x} ${f.y})"><g class="fl${i === all.length - 1 ? ' hint' : ''}" data-i="${i}" ${f.shadow ? 'filter="url(#sh)"' : ''} style="--d:${f.d}">${i === all.length - 1 ? '<circle class="halo" r="118" fill="url(#halo)"/>' : ''}<g class="sway" style="--d:${(i * .7) % 4}">
+    <g transform="rotate(${f.r}) scale(${f.flip ? -f.s : f.s} ${f.s})" style="--d:${f.d}">${f.art()}</g></g>${i === all.length - 1 ? '<circle class="ring" r="62"/><circle class="ring r2" r="62"/>' : ''}</g></g>`).join('');
   $('#bouquet').innerHTML = `<defs>${grads}
+    <radialGradient id="halo"><stop offset=".4" stop-color="#fff1a8" stop-opacity=".85"/><stop offset=".72" stop-color="#ffc400" stop-opacity=".55"/><stop offset="1" stop-color="#ffc400" stop-opacity="0"/></radialGradient>
     <linearGradient id="leaf" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#3f7d45"/><stop offset="1" stop-color="#7dbb74"/></linearGradient>
     <linearGradient id="paperL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ecd6ad"/><stop offset="1" stop-color="#d4b480"/></linearGradient>
     <linearGradient id="paperR" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3e1bd"/><stop offset="1" stop-color="#dcbe8b"/></linearGradient>
@@ -275,6 +287,7 @@ $('#hello').innerHTML = `Happy ${age ? nth(age) + ' ' : ''}birthday${her ? ', <e
 const ALL = buildBouquet();
 $('#bouquet').addEventListener('click', e => {
   const fl = e.target.closest('.fl'); if (!fl) return;
+  document.querySelector('.fl.hint')?.classList.remove('hint');
   fl.classList.remove('wig'); void fl.getBoundingClientRect(); fl.classList.add('wig');
   $('#caption').textContent = ALL[fl.dataset.i].name;
   hearts(e.clientX, e.clientY);
@@ -385,7 +398,7 @@ function playSong(){ wantSong = true; song.volume = .85; if (song.src) song.play
 $('#mute').onclick = () => {
   const b = $('#mute'); b.classList.remove('glow');
   if (song.paused){ playSong(); b.textContent = '🔇 Turn off the cheesy music'; }
-  else { wantSong = false; song.pause(); b.textContent = '🎵 Play the birthday music'; }
+  else { wantSong = false; song.pause(); b.textContent = '🎵 Play the cheesy music'; }
 };
 
 /* ---------- floaty bits ---------- */

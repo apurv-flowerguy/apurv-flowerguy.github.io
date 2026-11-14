@@ -1,0 +1,9 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Happy birthday 🌲</title>
+<meta property="og:title" content="Happy birthday 🌲">
+<meta property="og:description" content="Someone sent you birthday flowers.">
+<!-- The card itself is index.html; this file only gives it the address /243. The number picks the person (PEOPLE in index.html). -->
+<script>fetch('./').then(r => r.text()).then(h => { document.open(); document.write(h); document.close(); });</script>
